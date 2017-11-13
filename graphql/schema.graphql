@@ -1,0 +1,40 @@
+type Meetup {
+    id: ID!
+    name: String!
+    description: String!
+    price: Int!
+    priceFormatted: String!
+    isAvailable: Boolean!
+}
+
+type Wishlist {
+    meetups: [Meetup!]!
+}
+
+type Mutation {
+    addMeetup(name: String!, description: String!): Meetup
+    addComment(user: String!, message: String!): Comment
+}
+
+type Comment {
+    id: String!
+    user: String!
+    message: String!
+}
+
+type Subscription {
+  commentAdded: Comment
+}
+
+type RootQuery {
+    meetup(id: ID!): Meetup
+    meetups: [Meetup!]!
+    wishlist: Wishlist
+    comments: [Comment!]!
+}
+
+schema {
+    query: RootQuery
+    mutation: Mutation
+    subscription: Subscription
+}
