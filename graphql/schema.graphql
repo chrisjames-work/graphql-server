@@ -1,9 +1,16 @@
+input Upload {
+  name: String!
+  type: String!
+  size: Int!
+  path: String!
+}
+
 type Mutation {
   addComment(
     type: String!
     user: String!
     message: String
-    file: String
+    files: [Upload!]
   ): Comment
 }
 
@@ -12,7 +19,7 @@ type Comment {
   type: String!
   user: String!
   message: String
-  file: String
+  upload: [String!]
 }
 
 type Subscription {

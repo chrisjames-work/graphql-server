@@ -29,6 +29,7 @@ const data = {
     {
       id: "1",
       // timestamp: new Date(),
+      type: "text",
       user: "Chris",
       message: "How can I help you today?"
     }
@@ -52,15 +53,24 @@ const resolvers = {
     comments: () => data.comments
   },
   Mutation: {
-    addComment: (_, { type, user, message, file }) => {
+    addComment: (_, { type, user, message, files }) => {
       console.log('new comment:', type, user, message);
       const newComment = {
         id: data.comments.length + 1,
         type,
         user,
-        message,
-        file
+        message
       };
+
+      if (files) {
+        // console.log(files);
+        // files.forEach((image, index) => {
+        //   console.log(image);
+        //   console.log(`Image ${index} is ${image.size} bytes`);
+        // });
+
+        newComment.upload = files.map(image => image.path); // TODO: image object
+      }
 
       // side effect - save to "db"
       data.comments.push(newComment);

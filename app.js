@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+const { apolloUploadExpress } = require('apollo-upload-server');
 
 const { execute, subscribe } = require('graphql');
 const { createServer } = require('http');
@@ -9,6 +10,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const schema = require('./graphql/executableSchema');
 
 const PORT = 4000;
+
 
 var server = express();
 
@@ -37,7 +39,18 @@ server.options("/*", function(req, res, next){
   res.sendStatus(200);
 });
 
-server.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+// https://github.com/jaydenseric/apollo-upload-server
+server.use(
+  '/graphql',
+  bodyParser.json(),
+  apolloUploadExpress({
+    // Optional, defaults to OS temp directory
+    uploadDir: '/tmp/uploads'
+  }),
+  graphqlExpress({ schema })
+);
+
+// server.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 server.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
   subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`
